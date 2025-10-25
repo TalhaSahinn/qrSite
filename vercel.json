@@ -4,6 +4,7 @@
     { "src": "public/geo.html", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/geo.html", "dest": "/public/geo.html" }
+    { "src": "/geo.html", "dest": "/public/geo.html" },
+    { "src": "/", "dest": "/public/geo.html" }
   ]
 }
