@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "geo.html", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/geo.html", "dest": "/geo.html" }
+  ]
+}
