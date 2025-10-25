@@ -1,8 +1,27 @@
+<!doctype html>
 <html>
-    <head>
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
+<body>
+  <h2>Konum alınıyor...</h2>
+  <div id="status">Bekleniyor...</div>
+  <pre id="out"></pre>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const text = params.get('text') || '';
+    const status = document.getElementById('status');
+    const out = document.getElementById('out');
 
-    </head>
-    <body>
-        <h1>Merhaba</h1>
-    </body>
+    if (!navigator.geolocation) {
+      status.textContent = 'Geolocation desteklenmiyor';
+    } else {
+      navigator.geolocation.getCurrentPosition(pos => {
+        const data = {lat: pos.coords.latitude, lon: pos.coords.longitude, accuracy: pos.coords.accuracy, text};
+        status.textContent = 'Konum alındı';
+        out.textContent = JSON.stringify(data, null, 2);
+      }, err => {
+        status.textContent = 'Hata: ' + err.message;
+      }, {enableHighAccuracy:true, timeout:10000});
+    }
+  </script>
+</body>
 </html>
