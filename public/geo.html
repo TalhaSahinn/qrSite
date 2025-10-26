@@ -40,6 +40,23 @@
         window.location.replace(`${APP_SCHEME}error?message=${err.message}`);
       }, {enableHighAccuracy:true, timeout:10000});
     }
+    function sendLocationToApp() {
+      if (!navigator.geolocation) {
+        alert('Geolocation desteklenmiyor');
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        // custom scheme ile redirect
+        window.location.href = `myapp://location?lat=${lat}&lon=${lon}`;
+        // veya Android için Intent URI (opsiyonel)
+        // window.location.href = `intent://location?lat=${lat}&lon=${lon}#Intent;scheme=myapp;package=com.example.myapp;end`;
+      }, function(err){
+        alert('Konum alınamadı: ' + err.message);
+      }, {enableHighAccuracy: true});
+    }
   </script>
+  <button onclick="sendLocationToApp()">Konum gönder</button>
 </body>
 </html>
