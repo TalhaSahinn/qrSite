@@ -10,16 +10,34 @@
     const text = params.get('text') || '';
     const status = document.getElementById('status');
     const out = document.getElementById('out');
+    
+    // Uygulamanız için özel Deep Link şeması (Flutter projesinde de bu kullanılacak)
+    const APP_SCHEME = 'ygkapp://'; 
 
     if (!navigator.geolocation) {
       status.textContent = 'Geolocation desteklenmiyor';
     } else {
       navigator.geolocation.getCurrentPosition(pos => {
-        const data = {lat: pos.coords.latitude, lon: pos.coords.longitude, accuracy: pos.coords.accuracy, text};
-        status.textContent = 'Konum alındı';
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const acc = pos.coords.accuracy;
+
+        const data = {lat: lat, lon: lon, accuracy: acc, text: text};
+        
+        status.textContent = 'Konum alındı ve mobil uygulamaya yönlendiriliyor...';
         out.textContent = JSON.stringify(data, null, 2);
+
+        // Derin Bağlantı (Deep Link) oluşturuluyor
+        // Format: ygkapp://location?lat=...&lon=...&text=...
+        const deepLink = `${APP_SCHEME}location?lat=${lat}&lon=${lon}&acc=${acc}&text=${text}`;
+        
+        // Yönlendirme işlemi (Tarayıcıyı kapatıp uygulamayı açmaya çalışır)
+        window.location.replace(deepLink);
+
       }, err => {
-        status.textContent = 'Hata: ' + err.message;
+        status.textContent = 'Hata: Konum alınamadı! ' + err.message;
+        // Konum izni verilmezse, yine de uygulamaya yönlendirip hata bilgisini gönderir
+        window.location.replace(`${APP_SCHEME}error?message=${err.message}`);
       }, {enableHighAccuracy:true, timeout:10000});
     }
   </script>
